@@ -1,12 +1,22 @@
 from __future__ import annotations
 
+import sys
 import os
+
+# Get the absolute path to the directory containing the module
+# For example, if 'my_module.py' is in '../other_directory', use:
+module_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'cs336_alignment'))
+
+# Add the path to sys.path
+sys.path.insert(0, module_path) # or sys.path.append(module_path)
+
 from typing import Any, Callable, Literal
 
 import torch
 from torch import Tensor
 from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizerBase
+from sft import tokenize_prompt_and_output
 
 
 def run_tokenize_prompt_and_output(
@@ -31,7 +41,7 @@ def run_tokenize_prompt_and_output(
             "response_mask": torch.Tensor of shape (batch_size, max(prompt_and_output_lens) - 1):
                 a mask on the response tokens in `labels`.
     """
-    raise NotImplementedError
+    return tokenize_prompt_and_output(prompt_strs, output_strs, tokenizer)
 
 
 def run_compute_group_normalized_rewards(
