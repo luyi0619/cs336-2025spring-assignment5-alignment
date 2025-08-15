@@ -58,3 +58,12 @@ def get_response_log_probs(
   if return_token_entropy:
     result['token_entropy'] = compute_entropy(logits)
   return result
+
+
+def masked_normalize(
+  tensor: torch.Tensor,
+  mask: torch.Tensor,
+  dim: int | None = None,
+  normalize_constant: float = 1.0,
+) -> torch.Tensor:
+  return torch.sum(tensor * mask, dim = dim) / normalize_constant
