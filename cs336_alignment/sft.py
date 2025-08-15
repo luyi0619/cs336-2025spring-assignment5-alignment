@@ -78,4 +78,3 @@ def sft_microbatch_train_step(
   loss = -masked_normalize(tensor = policy_log_probs, mask = response_mask, dim = -1, normalize_constant = normalize_constant).mean() / gradient_accumulation_steps
   loss.backward()
   return (loss, {})
-  
