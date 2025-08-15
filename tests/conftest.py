@@ -210,7 +210,7 @@ def output_strs():
 
 @pytest.fixture
 def model_id():
-    return "/content/drive/MyDrive/cs336/assignment5-alignment/Qwen2.5-Math-1.5B"
+    return "/content/cs336-2025spring-assignment5-alignment/Qwen2.5-Math-1.5B"
 
 
 @pytest.fixture
