@@ -18,7 +18,7 @@ from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizerBase
 from sft import tokenize_prompt_and_output, compute_entropy, get_response_log_probs, masked_normalize, sft_microbatch_train_step
 from grpo import compute_group_normalized_rewards, compute_naive_policy_gradient_loss, compute_grpo_clip_loss, compute_policy_gradient_loss, masked_mean, grpo_microbatch_train_step
-
+from metrics import parse_mmlu_response
 
 def run_tokenize_prompt_and_output(
     prompt_strs: list[str],
@@ -363,7 +363,7 @@ def run_parse_mmlu_response(
         str (one of "A", "B", "C", or "D") if the model output can be parsed into a prediction,
         else None.
     """
-    raise NotImplementedError
+    return parse_mmlu_response(mmlu_example, model_output)
 
 
 def run_parse_gsm8k_response(
