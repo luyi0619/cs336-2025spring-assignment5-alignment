@@ -12,3 +12,13 @@ def parse_mmlu_response(
     answer = match.group(1)
     return answer
   return None
+
+
+def parse_gsm8k_response(
+    model_output: str,
+) -> str | None:
+  words = model_output.split()
+  for word in reversed(words):
+    if word.isdigit():
+      return word
+  return None
