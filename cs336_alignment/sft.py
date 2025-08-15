@@ -68,6 +68,7 @@ def masked_normalize(
 ) -> torch.Tensor:
   return torch.sum(tensor * mask, dim = dim) / normalize_constant
 
+
 def sft_microbatch_train_step(
   policy_log_probs: torch.Tensor,
   response_mask: torch.Tensor,
