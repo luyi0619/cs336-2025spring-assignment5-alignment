@@ -36,20 +36,9 @@ def tokenize_prompt_and_output(
 def compute_entropy(logits: torch.Tensor) -> torch.Tensor:
   # [b s v] -> [b s]
   #
-  # H(p) =− \sum p(x) log p(x), use logsumexp
-  #
-  # p(x) * log p(x)
-  #
-  # p(x) = exp(x - max) / \sum exp(i - max)
+  # H(p) =− \sum p(x) log p(x), log p(x) = log ( exp(x) / \sum exp(i)) = x - logsumexp(i)
   x = logits
-  x_minus_max = logits - torch.max(x, dim = -1, keepdim = True).values
-  x_minus_max_exp = torch.exp(x_minus_max)
-  x_minus_max_exp_sum = torch.sum(x_minus_max_exp, dim = -1, keepdim = True)
-  px = x_minus_max_exp / x_minus_max_exp_sum
-  #
-  # log p(x) = log ( exp(x) / \sum exp(i)) = x - logsumexp(i)
-  logsumexp = torch.logsumexp(x, dim = -1, keepdim = True)
-  logpx = x - logsumexp
-  #
-  # H(p) =− \sum p(x) log p(x)
+  logsumexp = torch.logsumexp(logits, dim = -1, keepdim = True)
+  logpx = logits - logsumexp
+  px = torch.exp(logpx)
   return -torch.sum(px * logpx, dim = -1) 
