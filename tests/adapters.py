@@ -19,6 +19,7 @@ from transformers import PreTrainedTokenizerBase
 from sft import tokenize_prompt_and_output, compute_entropy, get_response_log_probs, masked_normalize, sft_microbatch_train_step
 from grpo import compute_group_normalized_rewards, compute_naive_policy_gradient_loss, compute_grpo_clip_loss, compute_policy_gradient_loss, masked_mean, grpo_microbatch_train_step
 from metrics import parse_mmlu_response, parse_gsm8k_response
+from data import get_packed_sft_dataset_impl, iterate_batches
 
 def run_tokenize_prompt_and_output(
     prompt_strs: list[str],
@@ -314,7 +315,7 @@ def get_packed_sft_dataset(
         "input_ids" contains the token IDs for the language modeling inputs, and "labels" contains
         the token IDs for the language modeling labels.
     """
-    raise NotImplementedError
+    return get_packed_sft_dataset_impl(tokenizer, dataset_path, seq_length, shuffle)
 
 
 def run_iterate_batches(
@@ -337,7 +338,7 @@ def run_iterate_batches(
     Returns:
         Iterable over batches, where each batch has size `batch_size`.
     """
-    raise NotImplementedError
+    return iterate_batches(dataset, batch_size, shuffle)
 
 
 def run_parse_mmlu_response(
