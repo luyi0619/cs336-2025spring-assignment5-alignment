@@ -31,3 +31,25 @@ def tokenize_prompt_and_output(
     labels[i, :seq-1] = torch.tensor(sequence[1:])
     response_mask[i, prompt_len-1:prompt_len + output_len - 1 ] = True
   return {"input_ids": input_ids, "labels": labels, "response_mask": response_mask}
+
+
+def compute_entropy(logits: torch.Tensor) -> torch.Tensor:
+  # [b s v] -> [b s]
+  #
+  # H(p) =− \sum p(x) log p(x), use logsumexp
+  #
+  # p(x) * log p(x)
+  #
+  # p(x) = exp(x - max) / \sum exp(i - max)
+  x = logits
+  x_minus_max = logits - torch.max(x, dim = -1, keepdim = True).values
+  x_minus_max_exp = torch.exp(x_minus_max)
+  x_minus_max_exp_sum = torch.sum(x_minus_max_exp, dim = -1, keepdim = True)
+  px = x_minus_max_exp / x_minus_max_exp_sum
+  #
+  # log p(x) = log ( exp(x) / \sum exp(i)) = x - logsumexp(i)
+  logsumexp = torch.logsumexp(x, dim = -1, keepdim = True)
+  logpx = x - logsumexp
+  #
+  # H(p) =− \sum p(x) log p(x)
+  return -torch.sum(px * logpx, dim = -1) 
