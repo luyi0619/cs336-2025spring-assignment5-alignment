@@ -20,6 +20,7 @@ from sft import tokenize_prompt_and_output, compute_entropy, get_response_log_pr
 from grpo import compute_group_normalized_rewards, compute_naive_policy_gradient_loss, compute_grpo_clip_loss, compute_policy_gradient_loss, masked_mean, grpo_microbatch_train_step
 from metrics import parse_mmlu_response, parse_gsm8k_response
 from data import SftDataset, iterate_batches
+from dpo import compute_per_instance_dpo_loss
 
 def run_tokenize_prompt_and_output(
     prompt_strs: list[str],
@@ -416,4 +417,4 @@ def run_compute_per_instance_dpo_loss(
     Returns:
         torch.Tensor with the DPO loss for this example.
     """
-    raise NotImplementedError
+    return compute_per_instance_dpo_loss(lm, lm_ref, tokenizer, beta, prompt, response_chosen, response_rejected)
