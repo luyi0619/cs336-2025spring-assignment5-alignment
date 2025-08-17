@@ -29,9 +29,8 @@ class SftDataset(Dataset):
     if shuffle:
       random.shuffle(docs)
 
-    self.all_tokens = []
-    for doc in docs:
-      self.all_tokens += tokenizer.encode(doc) + [tokenizer.eos_token_id]
+    text = "<|end_of_text|><|begin_of_text|>".join(docs)
+    self.all_tokens = tokenizer.encode(text)
 
   def __len__(self):
     return (len(self.all_tokens) - 1) // self.seq_length
