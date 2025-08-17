@@ -3,7 +3,7 @@ import os
 import random
 import torch
 
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 from transformers import PreTrainedTokenizerBase
 
 
@@ -31,8 +31,8 @@ class SftDataset(Dataset):
 
 
     length = (len(all_tokens)-1) // seq_length
-    self.input_ids = torch.tensor(all_tokens[0:seq_length * length], dtype=torch.int32).reshape(length, seq_length)
-    self.labels = torch.tensor(all_tokens[1:seq_length * length+1], dtype=torch.int32).reshape(length, seq_length)
+    self.input_ids = torch.tensor(all_tokens[0:seq_length * length], dtype=torch.int64).reshape(length, seq_length)
+    self.labels = torch.tensor(all_tokens[1:seq_length * length+1], dtype=torch.int64).reshape(length, seq_length)
 
   def __len__(self):
     return self.input_ids.shape[0]
@@ -45,4 +45,5 @@ def iterate_batches(
     batch_size: int,
     shuffle: bool,
 ):
-    return None
+    data_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=shuffle)
+    return data_loader
